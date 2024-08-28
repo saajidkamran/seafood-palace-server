@@ -1,7 +1,6 @@
 import express from "express";
-import mongoose from "mongoose";
 import { connectToMongoDB } from "./DatabaseConnection";
-import { reserve } from "./routes/reservation";
+import reservationRoutes from "./routes/reservationRoutes";
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
@@ -9,8 +8,8 @@ app.use(express.json()); // Middleware to parse JSON bodies
 // Connect to MongoDB
 connectToMongoDB();
 
-// Reservation route
-app.post("/reserve", reserve);
+// Use reservation routes
+app.use("/reserve", reservationRoutes);
 
 // Start the server
 app.listen(3000, () => {
