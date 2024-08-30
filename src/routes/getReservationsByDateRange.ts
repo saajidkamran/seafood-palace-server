@@ -5,44 +5,41 @@ export const getReservationsByDateRange = async (
   req: Request,
   res: Response
 ) => {
-  // Extract start and end dates from the request body
-  const { fromDate, toDate } = req.body;
-
-  // Validate date parameters
-  if (!fromDate || !toDate) {
-    return res
-      .status(400)
-      .json({ message: "Start date and end date are required" });
-  }
-
-  // Convert dates to Date objects
-  const start = new Date(fromDate);
-  const end = new Date(toDate);
-
-  // Ensure the start date is before the end date
-  if (start > end) {
-    return res
-      .status(400)
-      .json({ message: "Start date cannot be after end date" });
-  }
-
   try {
-    // Retrieve reservations within the specified date range
-    const reservations = await Reservation.find({
-      date: {
-        $gte: start, // Greater than or equal to start date
-        $lte: end, // Less than or equal to end date
-      },
-    });
+    const { fromDate, toDate } = req.body;
 
-    if (!reservations.length) {
+    if (!fromDate || !toDate) {
       return res
-        .status(404)
-        .json({ message: "No reservations found for the given date range" });
+        .status(400)
+        .json({ message: "fromDate and toDate are required" });
     }
 
-    res.json(reservations);
-  } catch (error: any) {
-    res.status(400).json({ message: error.message });
+    const from = new Date(fromDate as string);
+    const to = new Date(toDate as string);
+
+    // Ensure toDate is the end of the day to include the entire day in the search range
+    to.setUTCHours(23, 59, 59, 999);
+
+    // Convert string dates in MongoDB to Date objects for comparison
+    const reservations = await Reservation.find({
+      $or: [
+        {
+          fromDate: { $lte: to.toISOString() },
+          toDate: { $gte: from.toISOString() },
+        },
+        { fromDate: { $gte: from.toISOString(), $lte: to.toISOString() } },
+        { toDate: { $gte: from.toISOString(), $lte: to.toISOString() } },
+      ],
+    });
+
+    if (reservations.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No reservations found within the given date range" });
+    }
+
+    return res.status(200).json(reservations);
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
   }
 };
