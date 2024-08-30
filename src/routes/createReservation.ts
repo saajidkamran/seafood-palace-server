@@ -9,12 +9,16 @@ export const createReservation = async (req: Request, res: Response) => {
     customerEmail,
     phoneNumber,
     message,
+    fromDate,
+    toDate,
   } = req.body;
 
   // Ensure all required fields are provided
   if (
     !user_id ||
     !customerName ||
+    !fromDate ||
+    !toDate ||
     guestCount === undefined ||
     !customerEmail ||
     phoneNumber === undefined
@@ -32,7 +36,8 @@ export const createReservation = async (req: Request, res: Response) => {
       customerEmail,
       phoneNumber,
       message,
-      date: new Date(), // Automatically set the current date
+      fromDate,
+      toDate,
     });
 
     const savedReservation = await reservation.save();

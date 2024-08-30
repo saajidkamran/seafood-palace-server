@@ -6,18 +6,18 @@ export const getReservationsByDateRange = async (
   res: Response
 ) => {
   // Extract start and end dates from the request body
-  const { startDate, endDate } = req.body;
+  const { fromDate, toDate } = req.body;
 
   // Validate date parameters
-  if (!startDate || !endDate) {
+  if (!fromDate || !toDate) {
     return res
       .status(400)
       .json({ message: "Start date and end date are required" });
   }
 
   // Convert dates to Date objects
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = new Date(fromDate);
+  const end = new Date(toDate);
 
   // Ensure the start date is before the end date
   if (start > end) {

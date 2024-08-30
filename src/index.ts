@@ -1,10 +1,12 @@
 import express from "express";
 import { connectToMongoDB } from "./DatabaseConnection";
 import reservationRoutes from "./routes/reservationRoutes";
+import cors from "cors";
 
 const app = express();
 app.use(express.json()); // Middleware to parse JSON bodies
-
+// Configure CORS
+app.use(cors()); // Allow all origins
 // Connect to MongoDB
 connectToMongoDB();
 

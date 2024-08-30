@@ -7,7 +7,8 @@ interface IReservation extends Document {
   customerEmail: string;
   phoneNumber: number;
   message: string;
-  date: Date;
+  toDate: Date;
+  fromDate: Date;
 }
 
 const ReservationSchema = new Schema<IReservation>({
@@ -17,7 +18,8 @@ const ReservationSchema = new Schema<IReservation>({
   customerEmail: { type: String, required: true },
   phoneNumber: { type: Number, required: true },
   message: { type: String, required: false },
-  date: { type: Date, default: Date.now }, // Set default to current date
+  toDate: { type: Date, required: true },
+  fromDate: { type: Date, required: true },
 });
 
 const Reservation = model<IReservation>("Reservation", ReservationSchema);
