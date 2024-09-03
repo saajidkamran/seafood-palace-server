@@ -3,7 +3,6 @@ import Reservation from "../models/Reservation";
 
 export const createReservation = async (req: Request, res: Response) => {
   const {
-    user_id,
     customerName,
     guestCount,
     customerEmail,
@@ -15,7 +14,6 @@ export const createReservation = async (req: Request, res: Response) => {
 
   // Ensure all required fields are provided
   if (
-    !user_id ||
     !customerName ||
     !fromDate ||
     !toDate ||
@@ -30,7 +28,6 @@ export const createReservation = async (req: Request, res: Response) => {
 
   try {
     const reservation = new Reservation({
-      user_id,
       customerName,
       guestCount,
       customerEmail,

@@ -1,7 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 
 interface IReservation extends Document {
-  user_id: string;
   customerName: string;
   guestCount: number;
   customerEmail: string;
@@ -12,7 +11,6 @@ interface IReservation extends Document {
 }
 
 const ReservationSchema = new Schema<IReservation>({
-  user_id: { type: String, required: true },
   customerName: { type: String, required: true },
   guestCount: { type: Number, required: true },
   customerEmail: { type: String, required: true },
